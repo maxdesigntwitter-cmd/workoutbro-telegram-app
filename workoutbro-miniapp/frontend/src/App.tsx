@@ -29,7 +29,10 @@ import { WorkoutProvider } from './contexts/WorkoutContext';
 const App: React.FC = () => {
   const { isReady } = useTelegram();
 
+  console.log('App: isReady =', isReady);
+
   if (!isReady) {
+    console.log('App: Showing loading screen');
     return (
       <div className="min-h-screen bg-dark-bg flex items-center justify-center">
         <div className="text-center">
@@ -39,6 +42,8 @@ const App: React.FC = () => {
       </div>
     );
   }
+
+  console.log('App: Rendering main app');
 
   return (
     <WorkoutProvider>

@@ -15,9 +15,11 @@ export const useTelegram = () => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    console.log('useTelegram: Initializing...');
     const tg = window.Telegram?.WebApp;
     
     if (tg) {
+      console.log('useTelegram: Telegram WebApp found');
       setWebApp(tg);
       
       // Initialize WebApp
@@ -27,10 +29,12 @@ export const useTelegram = () => {
       // Get user data
       const userData = tg.initDataUnsafe.user;
       if (userData) {
+        console.log('useTelegram: User data found:', userData);
         setUser(userData);
       }
       
       setIsReady(true);
+      console.log('useTelegram: Ready with Telegram WebApp');
       
       // Configure theme
       document.body.style.backgroundColor = tg.backgroundColor || '#0E0E10';
@@ -41,7 +45,7 @@ export const useTelegram = () => {
       }
     } else {
       // Fallback for development/testing outside Telegram
-      console.log('Telegram WebApp not available, using fallback');
+      console.log('useTelegram: Telegram WebApp not available, using fallback');
       setUser({
         id: 12345,
         first_name: 'Test User',
@@ -49,6 +53,7 @@ export const useTelegram = () => {
         username: 'testuser'
       });
       setIsReady(true);
+      console.log('useTelegram: Ready with fallback');
     }
   }, []);
 
