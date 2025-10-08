@@ -14,7 +14,7 @@ class ApiService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api',
+      baseURL: process.env.REACT_APP_API_URL || 'https://workoutbro-backend.onrender.com/api',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
