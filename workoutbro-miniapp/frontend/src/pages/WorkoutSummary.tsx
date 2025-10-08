@@ -52,10 +52,32 @@ const WorkoutSummary: React.FC = () => {
   const handleSaveWorkout = async () => {
     // Save workout data to backend
     try {
-      // await apiService.finishWorkout(workoutData.id, workoutData.total_volume, workoutData.completed_exercises, []);
-      console.log('Workout saved');
+      if (workoutData) {
+        // Создаем данные для сохранения
+        const exerciseSessions = currentWorkout?.exercises.map(exercise => ({
+          exercise_id: exercise.exerciseId,
+          exercise_name: `Exercise ${exercise.exerciseId}`,
+          sets_completed: exercise.sets.filter(set => set.completed).length,
+          total_sets: exercise.sets.length,
+          reps_per_set: exercise.sets.map(set => set.reps),
+          weights_used: exercise.sets.map(set => set.weight),
+          rest_times: exercise.sets.map(() => 120) // Default rest time
+        })) || [];
+
+        // Сохраняем тренировку
+        await apiService.finishWorkout(
+          workoutData.workout_id,
+          workoutData.total_volume,
+          workoutData.completed_exercises,
+          exerciseSessions
+        );
+        
+        console.log('Workout saved successfully');
+        alert('Тренировка сохранена!');
+      }
     } catch (error) {
       console.error('Error saving workout:', error);
+      alert('Ошибка при сохранении тренировки');
     }
   };
 

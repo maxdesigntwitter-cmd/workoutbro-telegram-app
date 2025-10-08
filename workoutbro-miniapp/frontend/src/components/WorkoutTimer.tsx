@@ -5,6 +5,9 @@ import { useWorkout } from '../contexts/WorkoutContext';
 const WorkoutTimer: React.FC = () => {
   const { currentWorkout } = useWorkout();
 
+  // Отладочная информация
+  console.log('WorkoutTimer render:', { currentWorkout });
+
   if (!currentWorkout?.isActive) {
     return null;
   }

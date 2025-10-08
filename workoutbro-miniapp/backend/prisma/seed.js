@@ -5,9 +5,13 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
+  // Очищаем существующие программы
+  await prisma.exercise.deleteMany({});
+  await prisma.workout.deleteMany({});
+  await prisma.program.deleteMany({});
+
   // Создаем одну программу тренировок для тестирования
-  const programs = await Promise.all([
-    prisma.program.create({
+  const program = await prisma.program.create({
       data: {
         title: 'Базовая программа',
         description: 'Универсальная программа для всех уровней',
@@ -123,10 +127,9 @@ async function main() {
           ]
         }
       }
-    })
-  ]);
+    });
 
-  console.log(`✅ Created ${programs.length} programs`);
+  console.log(`✅ Created 1 program`);
   console.log('🎉 Seeding completed!');
 }
 

@@ -59,13 +59,6 @@ const Home: React.FC = () => {
       icon: Play,
       color: 'bg-primary',
       onClick: () => navigate('/programs')
-    },
-    {
-      title: 'Выбрать программу',
-      subtitle: 'Доступные программы',
-      icon: BookOpen,
-      color: 'bg-green-500',
-      onClick: () => navigate('/programs')
     }
   ];
 
@@ -132,49 +125,6 @@ const Home: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Featured Programs */}
-        {programs.length > 0 && (
-          <motion.div variants={itemVariants}>
-            <h2 className="text-lg font-semibold text-text-primary mb-4">
-              Популярные программы
-            </h2>
-            <div className="space-y-3">
-              {programs.map((program) => (
-                <motion.div
-                  key={program.id}
-                  className="p-4 bg-dark-card border border-dark-border rounded-xl card"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                      <span className="text-2xl">💪</span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-text-primary mb-1">
-                        {program.title}
-                      </h3>
-                      <p className="text-sm text-text-secondary mb-2">
-                        {program.goal}
-                      </p>
-                      <div className="flex items-center space-x-4 text-xs text-text-secondary">
-                        <span>{program.duration_days} дней</span>
-                        <span>•</span>
-                        <span>5 тренировок/неделя</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => navigate(`/programs/${program.id}`)}
-                      className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
-                    >
-                      Открыть
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
       </motion.div>
     </div>
   );
