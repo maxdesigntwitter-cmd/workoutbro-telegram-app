@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/main.js",
     "dev": "nodemon src/main.ts",
-    "build": "tsc",
+    "build": "tsc --noEmitOnError false",
     "test": "jest",
     "migrate": "npx prisma migrate dev",
     "migrate:deploy": "npx prisma migrate deploy",
