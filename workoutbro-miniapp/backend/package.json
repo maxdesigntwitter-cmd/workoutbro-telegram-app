@@ -12,7 +12,7 @@
     "migrate:deploy": "npx prisma migrate deploy",
     "generate": "npx prisma generate",
     "studio": "npx prisma studio",
-    "seed": "ts-node prisma/seed.ts",
+    "seed": "node prisma/seed.js",
     "postinstall": "npx prisma generate && npx prisma migrate deploy && npm run seed",
     "render-postbuild": "npm run generate && npm run migrate:deploy && npm run seed"
   },
