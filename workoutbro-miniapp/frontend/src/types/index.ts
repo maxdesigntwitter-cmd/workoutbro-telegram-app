@@ -86,6 +86,8 @@ export interface Program {
   duration_days: number;
   image_url?: string;
   workouts?: Workout[];
+  workouts_count?: number;
+  total_exercises?: number;
 }
 
 export interface Workout {
