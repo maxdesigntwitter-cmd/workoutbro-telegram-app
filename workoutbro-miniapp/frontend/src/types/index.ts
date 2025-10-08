@@ -139,7 +139,7 @@ export interface WorkoutSession {
 }
 
 // Navigation types
-export type TabType = 'routines' | 'explore' | 'history' | 'measures' | 'more';
+export type TabType = 'home' | 'routines' | 'explore' | 'more';
 
 export interface NavigationTab {
   id: TabType;
