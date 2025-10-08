@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: workoutbro-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+    healthCheckPath: /health
+
+databases:
+  - name: workoutbro-database
+    plan: free
+    databaseName: workoutbro
+    user: workoutbro_user

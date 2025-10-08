@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Content Reactor - Улучшенный запуск
+# Решает проблемы с архитектурой и зависимостями
+
+# Основной путь к приложению
+CONTENT_REACTOR_DIR="/Users/imax/Local Sites/workoutbroclub/content_reactor"
+
+# Проверяем, что директория существует
+if [ ! -d "$CONTENT_REACTOR_DIR" ]; then
+    osascript -e 'display dialog "Ошибка: Не найдена директория Content Reactor. Проверьте путь: '"$CONTENT_REACTOR_DIR"'" buttons {"OK"} default button "OK" with icon stop'
+    exit 1
+fi
+
+# Переходим в директорию приложения
+cd "$CONTENT_REACTOR_DIR"
+
+# Проверяем наличие Python
+if ! command -v python3 &> /dev/null; then
+    osascript -e 'display dialog "Ошибка: Python 3 не найден. Пожалуйста, установите Python 3." buttons {"OK"} default button "OK" with icon stop'
+    exit 1
+fi
+
+# Проверяем зависимости
+if ! python3 -c "import streamlit" &> /dev/null; then
+    # Показываем уведомление вместо диалога
+    osascript -e 'display notification "Устанавливаю Streamlit..." with title "Content Reactor"'
+    echo "Устанавливаю Streamlit..."
+    python3 -m pip install streamlit --quiet --no-warn-script-location
+    if [ $? -eq 0 ]; then
+        osascript -e 'display notification "Streamlit установлен!" with title "Content Reactor"'
+    else
+        osascript -e 'display dialog "Ошибка установки Streamlit. Попробуйте запустить из терминала." buttons {"OK"} default button "OK" with icon stop'
+        exit 1
+    fi
+fi
+
+# Показываем уведомление о запуске
+osascript -e 'display notification "Запускаю Content Reactor..." with title "Content Reactor"'
+
+# Запускаем приложение
+python3 run.py
+
+# Если приложение закрылось, показываем уведомление
+osascript -e 'display notification "Content Reactor закрыт" with title "Content Reactor"'
