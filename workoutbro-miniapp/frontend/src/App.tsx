@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Components
 import BottomNavigation from './components/BottomNavigation';
+import WorkoutTimer from './components/WorkoutTimer';
 
 // Pages
 import Home from './pages/Home';
@@ -60,6 +61,7 @@ const App: React.FC = () => {
             </Routes>
           </AnimatePresence>
           
+          <WorkoutTimer />
           <BottomNavigation />
         </div>
       </Router>

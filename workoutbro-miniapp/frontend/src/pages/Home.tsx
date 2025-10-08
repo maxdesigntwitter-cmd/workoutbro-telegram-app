@@ -58,21 +58,14 @@ const Home: React.FC = () => {
       subtitle: 'Быстрый старт',
       icon: Play,
       color: 'bg-primary',
-      onClick: () => navigate('/routines')
+      onClick: () => navigate('/programs')
     },
     {
       title: 'Выбрать программу',
       subtitle: 'Доступные программы',
       icon: BookOpen,
       color: 'bg-green-500',
-      onClick: () => navigate('/routines')
-    },
-    {
-      title: 'Моя статистика',
-      subtitle: 'Прогресс и достижения',
-      icon: BarChart3,
-      color: 'bg-purple-500',
-      onClick: () => navigate('/history')
+      onClick: () => navigate('/programs')
     }
   ];
 

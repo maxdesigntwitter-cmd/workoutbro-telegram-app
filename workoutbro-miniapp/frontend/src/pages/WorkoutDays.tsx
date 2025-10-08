@@ -80,7 +80,7 @@ const WorkoutDays: React.FC = () => {
           >
             <ArrowLeft className="w-5 h-5 text-text-primary" />
           </button>
-          <div>
+          <div className="flex-1">
             <h1 className="text-xl font-bold text-text-primary">
               Расписание тренировок
             </h1>
@@ -89,6 +89,24 @@ const WorkoutDays: React.FC = () => {
             </p>
           </div>
         </div>
+
+        {/* Start Workout Button */}
+        {workouts.length > 0 && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            onClick={() => {
+              // Начинаем тренировку с первого дня
+              const firstWorkout = workouts[0];
+              navigate(`/workouts/${firstWorkout.id}/exercises`);
+            }}
+            className="w-full mb-6 p-4 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl font-semibold flex items-center justify-center space-x-2 hover:from-blue-600 hover:to-primary transition-all duration-200 btn-glow"
+          >
+            <Play className="w-5 h-5" />
+            <span>Начать тренировку</span>
+          </motion.button>
+        )}
 
         {/* Workout Days */}
         <div className="space-y-4">

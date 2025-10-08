@@ -11,32 +11,26 @@ import { NavigationTab, TabType } from '../types';
 
 const navigationTabs: NavigationTab[] = [
   {
+    id: 'home',
+    label: 'Главная',
+    icon: '🏠',
+    path: '/'
+  },
+  {
     id: 'routines',
-    label: 'Routines',
+    label: 'Программы',
     icon: '🏋️',
-    path: '/routines'
+    path: '/programs'
   },
   {
     id: 'explore',
-    label: 'Explore',
+    label: 'Исследовать',
     icon: '🔍',
     path: '/explore'
   },
   {
-    id: 'history',
-    label: 'History',
-    icon: '🕒',
-    path: '/history'
-  },
-  {
-    id: 'measures',
-    label: 'Measures',
-    icon: '📏',
-    path: '/measures'
-  },
-  {
     id: 'more',
-    label: 'More',
+    label: 'Еще',
     icon: '⋯',
     path: '/more'
   }

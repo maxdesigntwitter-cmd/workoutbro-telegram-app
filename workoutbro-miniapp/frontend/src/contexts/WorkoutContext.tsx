@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface ExerciseSetData {
   id: number;
@@ -19,6 +19,7 @@ export interface WorkoutSession {
   exercises: ExerciseData[];
   startTime?: Date;
   isActive: boolean;
+  elapsedTime: number; // в секундах
 }
 
 interface WorkoutContextType {
@@ -47,12 +48,39 @@ interface WorkoutProviderProps {
 export const WorkoutProvider: React.FC<WorkoutProviderProps> = ({ children }) => {
   const [currentWorkout, setCurrentWorkout] = useState<WorkoutSession | null>(null);
 
+  // Таймер для отслеживания времени тренировки
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (currentWorkout?.isActive && currentWorkout.startTime) {
+      interval = setInterval(() => {
+        const now = new Date();
+        const elapsed = Math.floor((now.getTime() - currentWorkout.startTime!.getTime()) / 1000);
+        
+        setCurrentWorkout(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            elapsedTime: elapsed
+          };
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [currentWorkout?.isActive, currentWorkout?.startTime]);
+
   const startWorkout = (workoutId: number) => {
     setCurrentWorkout({
       workoutId,
       exercises: [],
       startTime: new Date(),
-      isActive: true
+      isActive: true,
+      elapsedTime: 0
     });
   };
 

@@ -5,18 +5,18 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Создаем программы тренировок
+  // Создаем одну программу тренировок для тестирования
   const programs = await Promise.all([
     prisma.program.create({
       data: {
-        title: 'Начальная программа',
-        description: 'Программа для новичков в тренажерном зале',
-        goal: 'Набор мышечной массы и силы',
-        duration_days: 56, // 8 недель
+        title: 'Базовая программа',
+        description: 'Универсальная программа для всех уровней',
+        goal: 'Развитие силы и выносливости',
+        duration_days: 28, // 4 недели
         workouts: {
           create: [
             {
-              day_name: 'Тренировка A - Верх тела',
+              day_name: 'День 1 - Верх тела',
               order_index: 1,
               exercises: {
                 create: [
@@ -51,7 +51,7 @@ async function main() {
               }
             },
             {
-              day_name: 'Тренировка B - Низ тела',
+              day_name: 'День 2 - Низ тела',
               order_index: 2,
               exercises: {
                 create: [
@@ -84,119 +84,37 @@ async function main() {
                   }
                 ]
               }
-            }
-          ]
-        }
-      }
-    }),
-    prisma.program.create({
-      data: {
-        title: 'Средний уровень',
-        description: 'Программа для опытных атлетов',
-        goal: 'Увеличение силы и массы',
-        duration_days: 84, // 12 недель
-        workouts: {
-          create: [
-            {
-              day_name: 'Push день',
-              order_index: 1,
-              exercises: {
-                create: [
-                  {
-                    name: 'Жим штанги лежа',
-                    sets: 4,
-                    reps: 8,
-                    weight: 80,
-                    rest_time: 150,
-                    muscle_group: 'Грудь',
-                    order_index: 1
-                  },
-                  {
-                    name: 'Жим штанги стоя',
-                    sets: 4,
-                    reps: 8,
-                    weight: 40,
-                    rest_time: 120,
-                    muscle_group: 'Плечи',
-                    order_index: 2
-                  },
-                  {
-                    name: 'Отжимания на брусьях',
-                    sets: 3,
-                    reps: 12,
-                    weight: 0,
-                    rest_time: 90,
-                    muscle_group: 'Грудь',
-                    order_index: 3
-                  }
-                ]
-              }
             },
             {
-              day_name: 'Pull день',
-              order_index: 2,
-              exercises: {
-                create: [
-                  {
-                    name: 'Подтягивания',
-                    sets: 4,
-                    reps: 8,
-                    weight: 0,
-                    rest_time: 120,
-                    muscle_group: 'Спина',
-                    order_index: 1
-                  },
-                  {
-                    name: 'Тяга штанги в наклоне',
-                    sets: 4,
-                    reps: 8,
-                    weight: 70,
-                    rest_time: 120,
-                    muscle_group: 'Спина',
-                    order_index: 2
-                  },
-                  {
-                    name: 'Подъем штанги на бицепс',
-                    sets: 3,
-                    reps: 10,
-                    weight: 30,
-                    rest_time: 90,
-                    muscle_group: 'Бицепс',
-                    order_index: 3
-                  }
-                ]
-              }
-            },
-            {
-              day_name: 'Legs день',
+              day_name: 'День 3 - Полное тело',
               order_index: 3,
               exercises: {
                 create: [
                   {
-                    name: 'Приседания со штангой',
-                    sets: 4,
+                    name: 'Подтягивания',
+                    sets: 3,
                     reps: 8,
-                    weight: 100,
-                    rest_time: 180,
-                    muscle_group: 'Ноги',
+                    weight: 0,
+                    rest_time: 120,
+                    muscle_group: 'Спина',
                     order_index: 1
                   },
                   {
-                    name: 'Становая тяга',
-                    sets: 4,
-                    reps: 6,
-                    weight: 110,
-                    rest_time: 180,
-                    muscle_group: 'Спина',
+                    name: 'Отжимания',
+                    sets: 3,
+                    reps: 15,
+                    weight: 0,
+                    rest_time: 90,
+                    muscle_group: 'Грудь',
                     order_index: 2
                   },
                   {
-                    name: 'Болгарские приседания',
+                    name: 'Планка',
                     sets: 3,
-                    reps: 12,
-                    weight: 20,
-                    rest_time: 90,
-                    muscle_group: 'Ноги',
+                    reps: 30,
+                    weight: 0,
+                    rest_time: 60,
+                    muscle_group: 'Пресс',
                     order_index: 3
                   }
                 ]
