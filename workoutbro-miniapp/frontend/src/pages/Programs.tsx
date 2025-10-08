@@ -9,6 +9,7 @@ const Programs: React.FC = () => {
   const navigate = useNavigate();
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadPrograms();
@@ -16,12 +17,18 @@ const Programs: React.FC = () => {
 
   const loadPrograms = async () => {
     try {
+      setError(null);
+      setLoading(true);
+      console.log('Loading programs...');
       const response = await apiService.getPrograms();
+      console.log('Programs response:', response);
       if (response.success && response.data) {
         setPrograms(response.data);
+        console.log('Programs loaded:', response.data);
       }
     } catch (error) {
       console.error('Error loading programs:', error);
+      setError('Ошибка загрузки программ. Сервер может быть недоступен.');
     } finally {
       setLoading(false);
     }
@@ -71,7 +78,28 @@ const Programs: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-dark-bg flex items-center justify-center pb-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-text-secondary">Загрузка программ...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-dark-bg flex items-center justify-center pb-20">
+        <div className="text-center px-6">
+          <div className="text-6xl mb-4">😞</div>
+          <h2 className="text-xl font-semibold text-text-primary mb-2">Ошибка загрузки</h2>
+          <p className="text-text-secondary mb-6">{error}</p>
+          <button
+            onClick={loadPrograms}
+            className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+          >
+            Попробовать снова
+          </button>
+        </div>
       </div>
     );
   }
