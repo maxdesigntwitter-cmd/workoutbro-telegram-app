@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  telegram_id BigInt   @unique
+  username    String
+  first_name  String?
+  last_name   String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  user_workouts UserWorkout[]
+  measurements  Measurement[]
+
+  @@map("users")
+}
+
+model Program {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String
+  goal           String
+  duration_days  Int
+  image_url      String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  // Relations
+  workouts Workout[]
+
+  @@map("programs")
+}
+
+model Workout {
+  id          Int      @id @default(autoincrement())
+  program_id  Int
+  day_name    String
+  order_index Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  program         Program      @relation(fields: [program_id], references: [id], onDelete: Cascade)
+  exercises       Exercise[]
+  user_workouts   UserWorkout[]
+
+  @@map("workouts")
+}
+
+model Exercise {
+  id           Int      @id @default(autoincrement())
+  workout_id   Int
+  name         String
+  sets         Int
+  reps         Int
+  weight       Decimal
+  rest_time    Int      // in seconds
+  muscle_group String
+  order_index  Int      @default(0)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  // Relations
+  workout Workout @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+
+  @@map("exercises")
+}
+
+model UserWorkout {
+  id                  Int      @id @default(autoincrement())
+  user_id             Int
+  workout_id          Int
+  start_time          DateTime
+  end_time            DateTime?
+  total_volume        Decimal  @default(0)
+  completed_exercises Int      @default(0)
+  exercises_data      Json?    // Store exercise session data as JSON
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  // Relations
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  workout Workout @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+
+  @@map("user_workouts")
+}
+
+model Measurement {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  date       DateTime
+  weight     Decimal
+  body_fat   Decimal?
+  muscle     Decimal?
+  notes      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("measurements")
+}
