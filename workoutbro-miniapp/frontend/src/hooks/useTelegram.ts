@@ -16,45 +16,17 @@ export const useTelegram = () => {
 
   useEffect(() => {
     console.log('useTelegram: Initializing...');
-    const tg = window.Telegram?.WebApp;
     
-    if (tg) {
-      console.log('useTelegram: Telegram WebApp found');
-      setWebApp(tg);
-      
-      // Initialize WebApp
-      tg.ready();
-      tg.expand();
-      
-      // Get user data
-      const userData = tg.initDataUnsafe.user;
-      if (userData) {
-        console.log('useTelegram: User data found:', userData);
-        setUser(userData);
-      }
-      
-      setIsReady(true);
-      console.log('useTelegram: Ready with Telegram WebApp');
-      
-      // Configure theme
-      document.body.style.backgroundColor = tg.backgroundColor || '#0E0E10';
-      
-      // Configure header color
-      if (tg.headerColor) {
-        document.documentElement.style.setProperty('--tg-header-color', tg.headerColor);
-      }
-    } else {
-      // Fallback for development/testing outside Telegram
-      console.log('useTelegram: Telegram WebApp not available, using fallback');
-      setUser({
-        id: 12345,
-        first_name: 'Test User',
-        last_name: 'Development',
-        username: 'testuser'
-      });
-      setIsReady(true);
-      console.log('useTelegram: Ready with fallback');
-    }
+    // Always use fallback for now to test
+    console.log('useTelegram: Using fallback mode');
+    setUser({
+      id: 12345,
+      first_name: 'Test User',
+      last_name: 'Development',
+      username: 'testuser'
+    });
+    setIsReady(true);
+    console.log('useTelegram: Ready with fallback');
   }, []);
 
   const sendData = (data: any) => {
