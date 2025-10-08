@@ -39,6 +39,16 @@ export const useTelegram = () => {
       if (tg.headerColor) {
         document.documentElement.style.setProperty('--tg-header-color', tg.headerColor);
       }
+    } else {
+      // Fallback for development/testing outside Telegram
+      console.log('Telegram WebApp not available, using fallback');
+      setUser({
+        id: 12345,
+        first_name: 'Test User',
+        last_name: 'Development',
+        username: 'testuser'
+      });
+      setIsReady(true);
     }
   }, []);
 
