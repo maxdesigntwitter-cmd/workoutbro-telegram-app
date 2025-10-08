@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Play, BookOpen, BarChart3, User } from 'lucide-react';
+import { Play, BookOpen, BarChart3, User, Calendar, ArrowRight } from 'lucide-react';
 import { useTelegram } from '../hooks/useTelegram';
 import { apiService } from '../services/api';
 import { Program } from '../types';
@@ -20,12 +20,15 @@ const Home: React.FC = () => {
 
   const loadPrograms = async () => {
     try {
+      console.log('Home: Loading programs...');
       const response = await apiService.getPrograms();
+      console.log('Home: Programs response:', response);
       if (response.success && response.data) {
         setPrograms(response.data.slice(0, 3)); // Show only first 3 programs
+        console.log('Home: Programs set:', response.data.slice(0, 3));
       }
     } catch (error) {
-      console.error('Error loading programs:', error);
+      console.error('Home: Error loading programs:', error);
     } finally {
       setLoading(false);
     }
@@ -58,6 +61,13 @@ const Home: React.FC = () => {
       subtitle: 'Быстрый старт',
       icon: Play,
       color: 'bg-primary',
+      onClick: () => navigate('/programs')
+    },
+    {
+      title: 'Выбрать программу',
+      subtitle: 'Доступные программы',
+      icon: BookOpen,
+      color: 'bg-green-500',
       onClick: () => navigate('/programs')
     }
   ];
@@ -124,6 +134,51 @@ const Home: React.FC = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* Featured Programs */}
+        {programs.length > 0 && (
+          <motion.div variants={itemVariants} className="mb-8">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">
+              Популярные программы
+            </h2>
+            <div className="space-y-3">
+              {programs.map((program, index) => (
+                <motion.div
+                  key={program.id}
+                  onClick={() => navigate(`/programs/${program.id}`)}
+                  className="p-4 bg-dark-card border border-dark-border rounded-xl hover:border-primary transition-all duration-200 cursor-pointer"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                      <span className="text-2xl">🏋️</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-text-primary mb-1">
+                        {program.title}
+                      </h3>
+                      <p className="text-sm text-text-secondary mb-2">
+                        {program.description}
+                      </p>
+                      <div className="flex items-center space-x-4 text-xs text-text-secondary">
+                        <span className="flex items-center space-x-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{program.duration_days} дней</span>
+                        </span>
+                        <span className="flex items-center space-x-1">
+                          <BarChart3 className="w-3 h-3" />
+                          <span>{program.workouts_count} тренировок</span>
+                        </span>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-text-secondary" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
       </motion.div>
     </div>
