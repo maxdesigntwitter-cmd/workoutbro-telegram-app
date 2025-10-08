@@ -9,72 +9,78 @@ async function main() {
   const programs = await Promise.all([
     prisma.program.create({
       data: {
-        name: 'Начальная программа',
+        title: 'Начальная программа',
         description: 'Программа для новичков в тренажерном зале',
-        difficulty: 'BEGINNER',
-        duration_weeks: 8,
+        goal: 'Набор мышечной массы и силы',
+        duration_days: 56, // 8 недель
         workouts: {
           create: [
             {
-              name: 'Тренировка A - Верх тела',
-              description: 'Базовая тренировка для верхней части тела',
+              day_name: 'Тренировка A - Верх тела',
+              order_index: 1,
               exercises: {
                 create: [
                   {
                     name: 'Жим штанги лежа',
-                    description: 'Основное упражнение для груди',
-                    muscle_groups: ['CHEST', 'SHOULDERS', 'TRICEPS'],
                     sets: 3,
-                    reps: '8-12',
-                    rest_seconds: 120
+                    reps: 10,
+                    weight: 60,
+                    rest_time: 120,
+                    muscle_group: 'Грудь',
+                    order_index: 1
                   },
                   {
                     name: 'Тяга штанги в наклоне',
-                    description: 'Упражнение для спины',
-                    muscle_groups: ['BACK', 'BICEPS'],
                     sets: 3,
-                    reps: '8-12',
-                    rest_seconds: 120
+                    reps: 10,
+                    weight: 50,
+                    rest_time: 120,
+                    muscle_group: 'Спина',
+                    order_index: 2
                   },
                   {
                     name: 'Жим гантелей сидя',
-                    description: 'Упражнение для плеч',
-                    muscle_groups: ['SHOULDERS', 'TRICEPS'],
                     sets: 3,
-                    reps: '10-15',
-                    rest_seconds: 90
+                    reps: 12,
+                    weight: 20,
+                    rest_time: 90,
+                    muscle_group: 'Плечи',
+                    order_index: 3
                   }
                 ]
               }
             },
             {
-              name: 'Тренировка B - Низ тела',
-              description: 'Базовая тренировка для нижней части тела',
+              day_name: 'Тренировка B - Низ тела',
+              order_index: 2,
               exercises: {
                 create: [
                   {
                     name: 'Приседания со штангой',
-                    description: 'Король всех упражнений',
-                    muscle_groups: ['QUADS', 'GLUTES', 'HAMSTRINGS'],
                     sets: 3,
-                    reps: '8-12',
-                    rest_seconds: 120
+                    reps: 10,
+                    weight: 80,
+                    rest_time: 120,
+                    muscle_group: 'Ноги',
+                    order_index: 1
                   },
                   {
                     name: 'Становая тяга',
-                    description: 'Упражнение для всей задней цепи',
-                    muscle_groups: ['HAMSTRINGS', 'GLUTES', 'BACK'],
                     sets: 3,
-                    reps: '5-8',
-                    rest_seconds: 180
+                    reps: 6,
+                    weight: 90,
+                    rest_time: 180,
+                    muscle_group: 'Спина',
+                    order_index: 2
                   },
                   {
                     name: 'Выпады с гантелями',
-                    description: 'Упражнение для ног',
-                    muscle_groups: ['QUADS', 'GLUTES'],
                     sets: 3,
-                    reps: '10-12',
-                    rest_seconds: 90
+                    reps: 12,
+                    weight: 15,
+                    rest_time: 90,
+                    muscle_group: 'Ноги',
+                    order_index: 3
                   }
                 ]
               }
@@ -85,104 +91,113 @@ async function main() {
     }),
     prisma.program.create({
       data: {
-        name: 'Средний уровень',
+        title: 'Средний уровень',
         description: 'Программа для опытных атлетов',
-        difficulty: 'INTERMEDIATE',
-        duration_weeks: 12,
+        goal: 'Увеличение силы и массы',
+        duration_days: 84, // 12 недель
         workouts: {
           create: [
             {
-              name: 'Push день',
-              description: 'Тренировка толкающих мышц',
+              day_name: 'Push день',
+              order_index: 1,
               exercises: {
                 create: [
                   {
                     name: 'Жим штанги лежа',
-                    description: 'Основное упражнение для груди',
-                    muscle_groups: ['CHEST', 'SHOULDERS', 'TRICEPS'],
                     sets: 4,
-                    reps: '6-10',
-                    rest_seconds: 150
+                    reps: 8,
+                    weight: 80,
+                    rest_time: 150,
+                    muscle_group: 'Грудь',
+                    order_index: 1
                   },
                   {
                     name: 'Жим штанги стоя',
-                    description: 'Упражнение для плеч',
-                    muscle_groups: ['SHOULDERS', 'TRICEPS'],
                     sets: 4,
-                    reps: '6-10',
-                    rest_seconds: 120
+                    reps: 8,
+                    weight: 40,
+                    rest_time: 120,
+                    muscle_group: 'Плечи',
+                    order_index: 2
                   },
                   {
                     name: 'Отжимания на брусьях',
-                    description: 'Упражнение для груди и трицепсов',
-                    muscle_groups: ['CHEST', 'TRICEPS'],
                     sets: 3,
-                    reps: '8-15',
-                    rest_seconds: 90
+                    reps: 12,
+                    weight: 0,
+                    rest_time: 90,
+                    muscle_group: 'Грудь',
+                    order_index: 3
                   }
                 ]
               }
             },
             {
-              name: 'Pull день',
-              description: 'Тренировка тянущих мышц',
+              day_name: 'Pull день',
+              order_index: 2,
               exercises: {
                 create: [
                   {
                     name: 'Подтягивания',
-                    description: 'Упражнение для спины',
-                    muscle_groups: ['BACK', 'BICEPS'],
                     sets: 4,
-                    reps: '5-12',
-                    rest_seconds: 120
+                    reps: 8,
+                    weight: 0,
+                    rest_time: 120,
+                    muscle_group: 'Спина',
+                    order_index: 1
                   },
                   {
                     name: 'Тяга штанги в наклоне',
-                    description: 'Упражнение для спины',
-                    muscle_groups: ['BACK', 'BICEPS'],
                     sets: 4,
-                    reps: '6-10',
-                    rest_seconds: 120
+                    reps: 8,
+                    weight: 70,
+                    rest_time: 120,
+                    muscle_group: 'Спина',
+                    order_index: 2
                   },
                   {
                     name: 'Подъем штанги на бицепс',
-                    description: 'Упражнение для бицепсов',
-                    muscle_groups: ['BICEPS'],
                     sets: 3,
-                    reps: '8-12',
-                    rest_seconds: 90
+                    reps: 10,
+                    weight: 30,
+                    rest_time: 90,
+                    muscle_group: 'Бицепс',
+                    order_index: 3
                   }
                 ]
               }
             },
             {
-              name: 'Legs день',
-              description: 'Тренировка ног',
+              day_name: 'Legs день',
+              order_index: 3,
               exercises: {
                 create: [
                   {
                     name: 'Приседания со штангой',
-                    description: 'Основное упражнение для ног',
-                    muscle_groups: ['QUADS', 'GLUTES', 'HAMSTRINGS'],
                     sets: 4,
-                    reps: '6-10',
-                    rest_seconds: 180
+                    reps: 8,
+                    weight: 100,
+                    rest_time: 180,
+                    muscle_group: 'Ноги',
+                    order_index: 1
                   },
                   {
                     name: 'Становая тяга',
-                    description: 'Упражнение для задней цепи',
-                    muscle_groups: ['HAMSTRINGS', 'GLUTES', 'BACK'],
                     sets: 4,
-                    reps: '5-8',
-                    rest_seconds: 180
+                    reps: 6,
+                    weight: 110,
+                    rest_time: 180,
+                    muscle_group: 'Спина',
+                    order_index: 2
                   },
                   {
                     name: 'Болгарские приседания',
-                    description: 'Упражнение для ног',
-                    muscle_groups: ['QUADS', 'GLUTES'],
                     sets: 3,
-                    reps: '10-12',
-                    rest_seconds: 90
+                    reps: 12,
+                    weight: 20,
+                    rest_time: 90,
+                    muscle_group: 'Ноги',
+                    order_index: 3
                   }
                 ]
               }
