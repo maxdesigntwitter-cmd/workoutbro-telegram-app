@@ -12,8 +12,9 @@
     "migrate:deploy": "npx prisma migrate deploy",
     "generate": "npx prisma generate",
     "studio": "npx prisma studio",
-    "postinstall": "npx prisma generate && npx prisma migrate deploy",
-    "render-postbuild": "npm run generate && npm run migrate:deploy"
+    "seed": "ts-node prisma/seed.ts",
+    "postinstall": "npx prisma generate && npx prisma migrate deploy && npm run seed",
+    "render-postbuild": "npm run generate && npm run migrate:deploy && npm run seed"
   },
   "dependencies": {
     "express": "^4.18.2",
