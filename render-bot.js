@@ -372,11 +372,56 @@ bot.on('callback_query', async (ctx) => {
       case data.startsWith('approve_') ? data : null:
         const approveUserId = data.split('_')[1];
         await ctx.editMessageText(`✅ **Заявка одобрена!**\n\nПользователь ${approveUserId} получил доступ к PRO MODE.`);
+        
+        // Отправляем уведомление пользователю
+        try {
+          await bot.telegram.sendMessage(approveUserId, 
+            '🎉 <b>Поздравляем! Ваша заявка на PRO MODE одобрена!</b>\n\n' +
+            '✅ Вы получили доступ к персональной программе и коучингу.\n\n' +
+            '📞 <b>Связь с тренером:</b> @workoutbro_support\n\n' +
+            '🏠 <b>Главное меню:</b> /start',
+            {
+              parse_mode: 'HTML',
+              reply_markup: {
+                inline_keyboard: [
+                  [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
+                ]
+              }
+            }
+          );
+          console.log(`✅ Approval notification sent to user ${approveUserId}`);
+        } catch (error) {
+          console.log(`❌ Error sending approval notification to user ${approveUserId}:`, error.message);
+        }
         break;
         
       case data.startsWith('reject_') ? data : null:
         const rejectUserId = data.split('_')[1];
         await ctx.editMessageText(`❌ **Заявка отклонена**\n\nПользователь ${rejectUserId} получил уведомление об отклонении.`);
+        
+        // Отправляем уведомление пользователю
+        try {
+          await bot.telegram.sendMessage(rejectUserId, 
+            '😔 <b>Ваша заявка на PRO MODE отклонена</b>\n\n' +
+            'К сожалению, в данный момент мы не можем предоставить вам доступ к PRO MODE.\n\n' +
+            '💡 <b>Рекомендуем:</b>\n' +
+            '• Попробовать BASE или BRO уровни\n' +
+            '• Подать заявку повторно через некоторое время\n\n' +
+            '📞 <b>Вопросы:</b> @workoutbro_support\n\n' +
+            '🏠 <b>Главное меню:</b> /start',
+            {
+              parse_mode: 'HTML',
+              reply_markup: {
+                inline_keyboard: [
+                  [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
+                ]
+              }
+            }
+          );
+          console.log(`✅ Rejection notification sent to user ${rejectUserId}`);
+        } catch (error) {
+          console.log(`❌ Error sending rejection notification to user ${rejectUserId}:`, error.message);
+        }
         break;
     }
   } catch (error) {
