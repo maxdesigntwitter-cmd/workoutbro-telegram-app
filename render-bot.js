@@ -544,6 +544,83 @@ async function showNextQuestion(ctx, step) {
   }
 }
 
+// Функция показа следующего вопроса для текстовых ответов
+async function showNextQuestionForText(ctx, step) {
+  const userId = ctx.from.id;
+  const userState = userStates.get(userId);
+  
+  if (!userState) {
+    console.log(`No user state found for user ${userId}`);
+    return;
+  }
+  
+  const questions = {
+    2: {
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n\n<b>Вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>`,
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '🏃 1-2 раза в неделю', callback_data: 'pro_q2_1_2' }],
+          [{ text: '💪 3-4 раза в неделю', callback_data: 'pro_q2_3_4' }],
+          [{ text: '🔥 5-6 раз в неделю', callback_data: 'pro_q2_5_6' }],
+          [{ text: '📅 Ежедневно', callback_data: 'pro_q2_daily' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q2_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    },
+    3: {
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n✅ <b>Частота тренировок:</b> ${userState.answers.question_2}\n\n<b>Вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>`,
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '💪 Набор массы', callback_data: 'pro_q3_mass' }],
+          [{ text: '🔥 Похудение', callback_data: 'pro_q3_weight_loss' }],
+          [{ text: '💪 Сила', callback_data: 'pro_q3_strength' }],
+          [{ text: '🏃 Выносливость', callback_data: 'pro_q3_endurance' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q3_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    },
+    4: {
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n✅ <b>Частота тренировок:</b> ${userState.answers.question_2}\n✅ <b>Цели:</b> ${userState.answers.question_3}\n\n<b>Вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>`,
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '🏠 Дома', callback_data: 'pro_q4_home' }],
+          [{ text: '🏋️ В зале', callback_data: 'pro_q4_gym' }],
+          [{ text: '👨‍🏫 С тренером', callback_data: 'pro_q4_trainer' }],
+          [{ text: '🌳 На улице', callback_data: 'pro_q4_outdoor' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q4_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    },
+    5: {
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n✅ <b>Частота тренировок:</b> ${userState.answers.question_2}\n✅ <b>Цели:</b> ${userState.answers.question_3}\n✅ <b>Место тренировок:</b> ${userState.answers.question_4}\n\n<b>Вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>`,
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '✅ Нет ограничений', callback_data: 'pro_q5_none' }],
+          [{ text: '🩹 Есть травмы', callback_data: 'pro_q5_injuries' }],
+          [{ text: '⏰ Ограниченное время', callback_data: 'pro_q5_time' }],
+          [{ text: '🏠 Только дома', callback_data: 'pro_q5_home_only' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q5_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    }
+  };
+  
+  const question = questions[step];
+  if (question) {
+    await ctx.reply(question.text, {
+      reply_markup: question.keyboard,
+      parse_mode: 'HTML'
+    });
+    console.log(`Sent question ${step} to user ${userId} via reply`);
+  } else {
+    console.log(`No question found for step ${step}`);
+  }
+}
+
 // Функция завершения заявки
 async function completeProApplication(ctx, answers) {
   const userId = ctx.from.id;
@@ -614,9 +691,11 @@ bot.on('text', async (ctx) => {
     userState.waitingForCustomAnswer = null;
     userState.step = step + 1;
     
+    console.log(`User ${userId} answered question ${step} with custom text: ${text}`);
+    
     // Переходим к следующему вопросу
     if (step < 5) {
-      await showNextQuestion(ctx, step + 1);
+      await showNextQuestionForText(ctx, step + 1);
     } else {
       // Завершаем заявку
       await completeProApplication(ctx, userState.answers);
