@@ -71,7 +71,7 @@ const KEYBOARDS = {
 
 // Функция отправки заявки админу
 async function sendProApplicationToAdmin(userId, username, answers) {
-  const adminId = 285485174;
+  const adminId = 6517942046;
   const botToken = process.env.BOT_TOKEN;
   
   // Экранируем специальные символы для HTML
