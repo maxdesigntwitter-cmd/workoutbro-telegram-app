@@ -11,11 +11,11 @@ app.use(express.json());
 // Тексты
 const TEXTS = {
   WELCOME: 'Привет! Я WorkoutBro Bot. Выбери свой путь:',
-  FREE_COMMUNITY: '💪 **Бесплатное сообщество**\n\nЭто открытый канал WorkoutBro: мини-гайды, разборы и вызовы.\n\nХочешь систему и поддержку — загляни в клуб!',
-  CLUB_LEVELS: '🏆 **Закрытый клуб**\n\nВыберите уровень доступа:',
-  BASE_DESCRIPTION: '💪 **BASE MODE**\n\n• Доступ к материалам и постам\n• Без комментариев\n• Базовая поддержка\n\n💰 **Цена:** 990₽/месяц',
-  BRO_DESCRIPTION: '🔥 **BRO MODE**\n\n• Все из BASE\n• Комментарии и чат\n• Расширенная поддержка\n\n💰 **Цена:** 1990₽/месяц',
-  PRO_DESCRIPTION: '👑 **PRO MODE**\n\n• Индивидуальная программа\n• Персональное ведение тренером\n• Максимальная поддержка\n\n💰 **Цена:** По заявке'
+  FREE_COMMUNITY: '💪 <b>Бесплатное сообщество</b>\n\nЭто открытый канал WorkoutBro: мини-гайды, разборы и вызовы.\n\nХочешь систему и поддержку — загляни в клуб!',
+  CLUB_LEVELS: '🏆 <b>Закрытый клуб</b>\n\nВыберите уровень доступа:',
+  BASE_DESCRIPTION: '💪 <b>BASE MODE</b>\n\n• Доступ к материалам и постам\n• Без комментариев\n• Базовая поддержка\n\n💰 <b>Цена:</b> 990₽/месяц',
+  BRO_DESCRIPTION: '🔥 <b>BRO MODE</b>\n\n• Все из BASE\n• Комментарии и чат\n• Расширенная поддержка\n\n💰 <b>Цена:</b> 1990₽/месяц',
+  PRO_DESCRIPTION: '👑 <b>PRO MODE</b>\n\n• Индивидуальная программа\n• Персональное ведение тренером\n• Максимальная поддержка\n\n💰 <b>Цена:</b> По заявке'
 };
 
 // Клавиатуры
@@ -74,7 +74,17 @@ async function sendProApplicationToAdmin(userId, username, answers) {
   const adminId = 285485174;
   const botToken = process.env.BOT_TOKEN;
   
-  const applicationMessage = `📝 **Новая заявка PRO MODE**\n\n👤 **Пользователь:** @${username} (ID: ${userId})\n\n📋 **Данные заявки:**\n\n1️⃣ **Фитнес уровень:** ${answers.level}\n2️⃣ **Частота тренировок:** ${answers.frequency}\n3️⃣ **Цели:** ${answers.goals}\n4️⃣ **Опыт:** ${answers.experience}\n5️⃣ **Особенности:** ${answers.special}\n\n💬 **Связаться с пользователем:** [Написать](tg://user?id=${userId})`;
+  // Экранируем специальные символы для HTML
+  const escapeHtml = (text) => {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+  
+  const applicationMessage = `📝 <b>Новая заявка PRO MODE</b>\n\n👤 <b>Пользователь:</b> @${escapeHtml(username)} (ID: ${userId})\n\n📋 <b>Данные заявки:</b>\n\n1️⃣ <b>Фитнес уровень:</b> ${escapeHtml(answers.level)}\n2️⃣ <b>Частота тренировок:</b> ${escapeHtml(answers.frequency)}\n3️⃣ <b>Цели:</b> ${escapeHtml(answers.goals)}\n4️⃣ <b>Опыт:</b> ${escapeHtml(answers.experience)}\n5️⃣ <b>Особенности:</b> ${escapeHtml(answers.special)}\n\n💬 <b>Связаться с пользователем:</b> <a href="tg://user?id=${userId}">Написать</a>`;
   
   const keyboard = {
     inline_keyboard: [
@@ -93,7 +103,7 @@ async function sendProApplicationToAdmin(userId, username, answers) {
       body: JSON.stringify({
         chat_id: adminId,
         text: applicationMessage,
-        parse_mode: 'Markdown',
+        parse_mode: 'HTML',
         reply_markup: keyboard
       })
     });
@@ -119,7 +129,7 @@ bot.start(async (ctx) => {
   try {
     await ctx.reply(TEXTS.WELCOME, {
       reply_markup: KEYBOARDS.MAIN_MENU,
-      parse_mode: 'Markdown'
+      parse_mode: 'HTML'
     });
     console.log(`Reply sent to user ${ctx.from.id}`);
   } catch (error) {
@@ -133,7 +143,7 @@ bot.command('pro_application', async (ctx) => {
   try {
     await ctx.reply('📝 **Заявка на PRO MODE**\n\n**Вопрос 1/5:**\n\n🏋️ **Какой у вас фитнес уровень?**', {
       reply_markup: KEYBOARDS.PRO_QUESTIONS,
-      parse_mode: 'Markdown'
+      parse_mode: 'HTML'
     });
   } catch (error) {
     console.log(`Error sending PRO application to user ${ctx.from.id}:`, error.message);
@@ -155,42 +165,42 @@ bot.on('callback_query', async (ctx) => {
       case 'free_community':
         await ctx.editMessageText(TEXTS.FREE_COMMUNITY, {
           reply_markup: KEYBOARDS.FREE_COMMUNITY,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
       case 'paid_club':
         await ctx.editMessageText(TEXTS.CLUB_LEVELS, {
           reply_markup: KEYBOARDS.CLUB_LEVELS,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
       case 'level_base':
         await ctx.editMessageText(TEXTS.BASE_DESCRIPTION, {
           reply_markup: KEYBOARDS.BASE_PAYMENT,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
       case 'level_bro':
         await ctx.editMessageText(TEXTS.BRO_DESCRIPTION, {
           reply_markup: KEYBOARDS.BRO_PAYMENT,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
       case 'level_pro':
         await ctx.editMessageText(TEXTS.PRO_DESCRIPTION, {
           reply_markup: KEYBOARDS.PRO_APPLICATION,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
       case 'pro_application':
         await ctx.editMessageText('📝 **Заявка на PRO MODE**\n\n**Вопрос 1/5:**\n\n🏋️ **Какой у вас фитнес уровень?**', {
           reply_markup: KEYBOARDS.PRO_QUESTIONS,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
@@ -214,14 +224,14 @@ bot.on('callback_query', async (ctx) => {
               [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
             ]
           },
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
       case 'back_to_main':
         await ctx.editMessageText(TEXTS.WELCOME, {
           reply_markup: KEYBOARDS.MAIN_MENU,
-          parse_mode: 'Markdown'
+          parse_mode: 'HTML'
         });
         break;
         
@@ -269,7 +279,7 @@ async function handleProAnswer(ctx, step, answer) {
             [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
           ]
         },
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
       }
     );
   } else {
@@ -281,7 +291,7 @@ async function handleProAnswer(ctx, step, answer) {
             [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
           ]
         },
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
       }
     );
   }
@@ -316,7 +326,7 @@ bot.on('text', async (ctx) => {
             [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
           ]
         },
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
       }
     );
   } else {
@@ -328,7 +338,7 @@ bot.on('text', async (ctx) => {
             [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
           ]
         },
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
       }
     );
   }
