@@ -401,16 +401,21 @@ async function handleProAnswer(ctx, step, answer) {
       answers: {}
     };
     userStates.set(userId, userState);
+    console.log(`Created new user state for user ${userId}`);
   }
   
   // Сохраняем ответ
   userState.answers[`question_${step}`] = answer;
   userState.step = step + 1;
   
+  console.log(`Updated user state for user ${userId}:`, userState);
+  
   // Если это не последний вопрос, показываем следующий
   if (step < 5) {
+    console.log(`Showing next question ${step + 1} for user ${userId}`);
     await showNextQuestion(ctx, step + 1);
   } else {
+    console.log(`Completing application for user ${userId}`);
     // Завершаем заявку
     await completeProApplication(ctx, userState.answers);
     userStates.delete(userId);
@@ -419,9 +424,17 @@ async function handleProAnswer(ctx, step, answer) {
 
 // Функция показа следующего вопроса
 async function showNextQuestion(ctx, step) {
+  const userId = ctx.from.id;
+  const userState = userStates.get(userId);
+  
+  if (!userState) {
+    console.log(`No user state found for user ${userId}`);
+    return;
+  }
+  
   const questions = {
     2: {
-      text: '✅ <b>Фитнес уровень:</b> ' + ctx.callbackQuery.message.text.split('🏋️')[1].split('\n')[0] + '\n\n<b>Вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>',
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n\n<b>Вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>`,
       keyboard: {
         inline_keyboard: [
           [{ text: '🏃 1-2 раза в неделю', callback_data: 'pro_q2_1_2' }],
@@ -434,7 +447,7 @@ async function showNextQuestion(ctx, step) {
       }
     },
     3: {
-      text: '✅ <b>Частота тренировок:</b> ' + ctx.callbackQuery.message.text.split('📅')[1].split('\n')[0] + '\n\n<b>Вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>',
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n✅ <b>Частота тренировок:</b> ${userState.answers.question_2}\n\n<b>Вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>`,
       keyboard: {
         inline_keyboard: [
           [{ text: '💪 Набор массы', callback_data: 'pro_q3_mass' }],
@@ -447,7 +460,7 @@ async function showNextQuestion(ctx, step) {
       }
     },
     4: {
-      text: '✅ <b>Цели:</b> ' + ctx.callbackQuery.message.text.split('🎯')[1].split('\n')[0] + '\n\n<b>Вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>',
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n✅ <b>Частота тренировок:</b> ${userState.answers.question_2}\n✅ <b>Цели:</b> ${userState.answers.question_3}\n\n<b>Вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>`,
       keyboard: {
         inline_keyboard: [
           [{ text: '🏠 Дома', callback_data: 'pro_q4_home' }],
@@ -460,7 +473,7 @@ async function showNextQuestion(ctx, step) {
       }
     },
     5: {
-      text: '✅ <b>Место тренировок:</b> ' + ctx.callbackQuery.message.text.split('🏋️')[1].split('\n')[0] + '\n\n<b>Вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>',
+      text: `✅ <b>Фитнес уровень:</b> ${userState.answers.question_1}\n✅ <b>Частота тренировок:</b> ${userState.answers.question_2}\n✅ <b>Цели:</b> ${userState.answers.question_3}\n✅ <b>Место тренировок:</b> ${userState.answers.question_4}\n\n<b>Вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>`,
       keyboard: {
         inline_keyboard: [
           [{ text: '✅ Нет ограничений', callback_data: 'pro_q5_none' }],
@@ -480,6 +493,8 @@ async function showNextQuestion(ctx, step) {
       reply_markup: question.keyboard,
       parse_mode: 'HTML'
     });
+  } else {
+    console.log(`No question found for step ${step}`);
   }
 }
 
