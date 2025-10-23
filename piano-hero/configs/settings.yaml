@@ -1,0 +1,35 @@
+# Piano Hero Cover - Основные настройки пайплайна
+
+# Видео параметры
+fps: 60
+target_width: 1080
+target_height: 1920
+base_render_width: 1080
+base_render_height: 1080
+
+# Аудио параметры
+audio_bitrate: "256k"
+sample_rate: 44100
+midi_gain: 0.9
+
+# Кодирование видео
+crf: 18
+preset: "medium"
+
+# Пути к внешним инструментам
+midivisualizer_bin: "./MidiVisualizer/midivisualizer"
+fluidsynth_bin: "fluidsynth"
+soundfont_path: "./assets/piano.sf2"
+ffmpeg_bin: "./ffmpeg"
+
+# Опции рендера
+trim_to_audio: true
+render_melody_only: true
+
+# Временные файлы
+work_dir: "./work"
+input_dir: "./input"
+output_dir: "./output"
+
+# Логирование
+log_level: "INFO"

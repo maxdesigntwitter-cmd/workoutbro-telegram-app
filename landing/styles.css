@@ -1358,3 +1358,67 @@ body {
         height: 250px;
     }
 }
+
+/* First Time Language Modal Styles */
+.language-settings-title {
+    font-size: 0.9rem !important;
+    color: #888 !important;
+    text-align: center;
+    margin: 0 0 15px 0;
+    font-weight: 400;
+}
+
+.language-question {
+    font-size: 1.4rem;
+    color: #ffffff;
+    text-align: center;
+    margin: 20px 0 30px 0;
+    font-weight: 600;
+}
+
+.language-confirm-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.language-confirm-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.language-confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Mobile styles for language modal */
+@media (max-width: 768px) {
+    .language-settings-title {
+        font-size: 0.8rem !important;
+    }
+    
+    .language-confirm-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .language-confirm-btn {
+        width: 100%;
+        padding: 18px 20px;
+    }
+    
+    .language-question {
+        font-size: 1.2rem;
+        margin: 15px 0 25px 0;
+    }
+}

@@ -62,6 +62,8 @@ const translations = {
         
         // Language Modal
         selectLanguageTitle: "Select Language",
+        languageQuestion: "Is your language English?",
+        languageQuestionRu: "Is your language Russian?",
         
         // Download Modal
         modalTitle: "Get Your Free Program",
@@ -139,6 +141,8 @@ const translations = {
         
         // Language Modal
         selectLanguageTitle: "Выберите Язык",
+        languageQuestion: "Ваш язык русский?",
+        languageQuestionRu: "Ваш язык русский?",
         
         // Download Modal
         modalTitle: "Получите Вашу Бесплатную Программу",
@@ -196,6 +200,58 @@ function detectUserLanguage() {
     }
     
     return 'en'; // Default to English
+}
+
+// Check if user has made language choice before
+function hasUserChosenLanguage() {
+    return localStorage.getItem('workoutBroLanguageChoice') !== null;
+}
+
+// Show first-time language selection modal
+function showFirstTimeLanguageModal() {
+    const detectedLang = detectUserLanguage();
+    const modal = document.getElementById('first-time-language-modal');
+    const questionElement = document.getElementById('language-question');
+    const yesBtn = document.getElementById('yes-btn');
+    const noBtn = document.getElementById('no-btn');
+    
+    // Always show English by default, only show Russian if explicitly detected
+    if (detectedLang === 'ru') {
+        questionElement.textContent = 'Ваш язык русский?';
+        yesBtn.textContent = 'Да';
+        noBtn.textContent = 'Нет';
+    } else {
+        // Default to English for all other cases (including undetected)
+        questionElement.textContent = 'Is your language English?';
+        yesBtn.textContent = 'Yes';
+        noBtn.textContent = 'No';
+    }
+    
+    modal.style.display = 'block';
+}
+
+// Handle language confirmation
+function confirmLanguage(isCorrect) {
+    const detectedLang = detectUserLanguage();
+    let finalLang;
+    
+    if (detectedLang === 'ru') {
+        // If detected Russian and user confirms, use Russian
+        // If detected Russian but user says no, use English
+        finalLang = isCorrect ? 'ru' : 'en';
+    } else {
+        // If detected English and user confirms, use English
+        // If detected English but user says no, use Russian
+        finalLang = isCorrect ? 'en' : 'ru';
+    }
+    
+    // Save the choice
+    localStorage.setItem('workoutBroLanguageChoice', 'true');
+    localStorage.setItem('workoutBroLanguage', finalLang);
+    
+    // Close modal and apply language
+    closeModal('first-time-language-modal');
+    applyTranslations(finalLang);
 }
 
 // Apply translations to the page
@@ -271,8 +327,14 @@ function selectLanguage(lang) {
 
 // Initialize language system
 function initializeLanguage() {
-    const detectedLang = detectUserLanguage();
-    applyTranslations(detectedLang);
+    if (hasUserChosenLanguage()) {
+        // User has made a choice before, use saved preference
+        const savedLang = localStorage.getItem('workoutBroLanguage') || 'en';
+        applyTranslations(savedLang);
+    } else {
+        // First time visitor, show language selection modal
+        showFirstTimeLanguageModal();
+    }
 }
 
 // Initialize the page
@@ -575,10 +637,22 @@ function showError(errorElement, message) {
 }
 
 function startDownload() {
+    // Determine which file to download based on current language
+    const currentLang = localStorage.getItem('workoutBroLanguage') || 'en';
+    let fileName, downloadPath;
+    
+    if (currentLang === 'ru') {
+        fileName = 'Bigger-Arms-22-Day-Program-RU.pdf';
+        downloadPath = 'downloads/Bigger-Arms-22-Day-Program-RU.pdf';
+    } else {
+        fileName = 'Bigger-Arms-22-Day-Program-EN.pdf';
+        downloadPath = 'downloads/Bigger-Arms-22-Day-Program-EN.pdf';
+    }
+    
     // Create a temporary link to trigger download
     const link = document.createElement('a');
-    link.href = 'downloads/Bigger-Arms-22-Day-Program.pdf'; // Path to your PDF file
-    link.download = 'Bigger-Arms-22-Day-Program.pdf';
+    link.href = downloadPath;
+    link.download = fileName;
     link.target = '_blank'; // Open in new tab as fallback
     
     // Trigger download
@@ -586,7 +660,7 @@ function startDownload() {
     link.click();
     document.body.removeChild(link);
     
-    console.log('Download started for: Bigger-Arms-22-Day-Program.pdf');
+    console.log('Download started for:', fileName);
 }
 
 function showSuccessMessage() {

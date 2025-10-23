@@ -1,0 +1,22 @@
+{
+  "name": "workoutbro-bot",
+  "version": "1.0.0",
+  "description": "WorkoutBro Telegram Bot",
+  "main": "simple-pro-bot.js",
+  "scripts": {
+    "start": "node render-bot.js",
+    "dev": "node simple-pro-bot.js",
+    "build": "echo 'No build step needed'"
+  },
+  "dependencies": {
+    "telegraf": "^4.15.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["telegram", "bot", "workout", "fitness"],
+  "author": "WorkoutBro",
+  "license": "MIT"
+}

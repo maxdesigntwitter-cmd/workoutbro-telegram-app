@@ -1,0 +1,24 @@
+{
+  "keyboard": {
+    "drawKeys": true,
+    "drawKeyLabels": false,
+    "height": 180
+  },
+  "theme": {
+    "backgroundColor": "#0B0B0B",
+    "noteColor": "#FFD447",
+    "highlightColor": "#FFE37A",
+    "whiteKeyColor": "#FFFFFF",
+    "blackKeyColor": "#111111"
+  },
+  "render": {
+    "cameraMode": "top",
+    "showShadows": true,
+    "noteOpacity": 1.0,
+    "noteHeight": 18.0,
+    "fallingNotes": true
+  }
+}
+
+
+

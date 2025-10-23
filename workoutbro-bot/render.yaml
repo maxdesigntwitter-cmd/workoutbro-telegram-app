@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: workoutbro-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node simple-pro-bot.js
+    envVars:
+      - key: BOT_TOKEN
+        value: 8209346537:AAGKLa-x1zZR0Htp-DlOVjVvUx0L81b8aik
+      - key: NODE_ENV
+        value: production

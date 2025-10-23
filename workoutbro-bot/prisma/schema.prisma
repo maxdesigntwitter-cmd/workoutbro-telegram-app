@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  telegramId  BigInt   @unique @map("telegram_id")
+  username    String?
+  firstName   String?  @map("first_name")
+  lastName    String?  @map("last_name")
+  language    String   @default("ru")
+  
+  // Subscription info
+  level       String    @default("FREE")
+  since       DateTime?
+  expiresAt   DateTime? @map("expires_at")
+  
+  // Tracking
+  source      String?  // utm_source, start_param
+  lastSeen    DateTime @default(now()) @map("last_seen")
+  consent     Boolean  @default(false)
+  
+  // Relations
+  auditLogs   AuditLog[]
+  materials   UserMaterial[]
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("users")
+}
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  action      String   // "access_granted", "access_revoked", "upgrade", etc.
+  level       String
+  inviteLink  String?  @map("invite_link")
+  adminId     Int?     @map("admin_id")
+  metadata    String?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  @@map("audit_logs")
+}
+
+model UserMaterial {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  materialId  Int      @map("material_id")
+  accessedAt  DateTime @default(now()) @map("accessed_at")
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  material    Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, materialId])
+  @@map("user_materials")
+}
+
+model Material {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  category    String
+  level       String
+  url         String
+  isActive    Boolean  @default(true) @map("is_active")
+  
+  // Relations
+  userMaterials UserMaterial[]
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("materials")
+}
+
+model InviteLink {
+  id          Int      @id @default(autoincrement())
+  link        String   @unique
+  level       String
+  userId      Int?     @map("user_id")
+  isUsed      Boolean  @default(false) @map("is_used")
+  expiresAt   DateTime? @map("expires_at")
+  maxUses     Int?     @default(1) @map("max_uses")
+  currentUses Int      @default(0) @map("current_uses")
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  @@map("invite_links")
+}
+
+model Subscription {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  level       String
+  status      String             @default("PENDING")
+  tributeId   String?  @map("tribute_id")
+  amount      Decimal?
+  currency    String?  @default("RUB")
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("subscriptions")
+}
+
+// Enums are not supported in SQLite, using String instead
+// UserLevel: FREE, BASE, BRO, PRO
+// MaterialCategory: PROGRAMS, RECOVERY, NUTRITION, FAQ, TECHNIQUE  
+// SubscriptionStatus: PENDING, ACTIVE, EXPIRED, CANCELLED
