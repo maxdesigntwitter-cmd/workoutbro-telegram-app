@@ -219,22 +219,27 @@ bot.on('callback_query', async (ctx) => {
         break;
         
       case 'pro_q1_custom':
-        // Устанавливаем флаг ожидания пользовательского ответа
-        let userState = userStates.get(userId);
-        if (!userState) {
-          userState = { step: 1, answers: {} };
-          userStates.set(userId, userState);
+        try {
+          // Устанавливаем флаг ожидания пользовательского ответа
+          let userState = userStates.get(userId);
+          if (!userState) {
+            userState = { step: 1, answers: {} };
+            userStates.set(userId, userState);
+          }
+          userState.waitingForCustomAnswer = 1;
+          console.log(`User ${userId} selected custom answer for question 1. UserState:`, userState);
+          
+          await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 1/5:</b>\n\n🏋️ <b>Какой у вас фитнес уровень?</b>\n\nНапишите ваш ответ в чат:', {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+        } catch (error) {
+          console.log(`Error handling pro_q1_custom for user ${userId}:`, error.message);
         }
-        userState.waitingForCustomAnswer = 1;
-        
-        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 1/5:</b>\n\n🏋️ <b>Какой у вас фитнес уровень?</b>\n\nНапишите ваш ответ в чат:', {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
-            ]
-          },
-          parse_mode: 'HTML'
-        });
         break;
         
       // Вопрос 2 - частота тренировок
@@ -251,22 +256,26 @@ bot.on('callback_query', async (ctx) => {
         await handleProAnswer(ctx, 2, 'Ежедневно');
         break;
       case 'pro_q2_custom':
-        userState = userStates.get(userId);
-        if (!userState) {
-          userState = { step: 2, answers: {} };
-          userStates.set(userId, userState);
+        try {
+          userState = userStates.get(userId);
+          if (!userState) {
+            userState = { step: 2, answers: {} };
+            userStates.set(userId, userState);
+          }
+          userState.waitingForCustomAnswer = 2;
+          console.log(`User ${userId} selected custom answer for question 2. UserState:`, userState);
+          
+          await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+        } catch (error) {
+          console.log(`Error handling pro_q2_custom for user ${userId}:`, error.message);
         }
-        userState.waitingForCustomAnswer = 2;
-        console.log(`User ${userId} selected custom answer for question 2. UserState:`, userState);
-        
-        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
-            ]
-          },
-          parse_mode: 'HTML'
-        });
         break;
         
       // Вопрос 3 - цели
@@ -283,22 +292,26 @@ bot.on('callback_query', async (ctx) => {
         await handleProAnswer(ctx, 3, 'Выносливость');
         break;
       case 'pro_q3_custom':
-        userState = userStates.get(userId);
-        if (!userState) {
-          userState = { step: 3, answers: {} };
-          userStates.set(userId, userState);
+        try {
+          userState = userStates.get(userId);
+          if (!userState) {
+            userState = { step: 3, answers: {} };
+            userStates.set(userId, userState);
+          }
+          userState.waitingForCustomAnswer = 3;
+          console.log(`User ${userId} selected custom answer for question 3. UserState:`, userState);
+          
+          await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>\n\nНапишите ваш ответ в чат:', {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+        } catch (error) {
+          console.log(`Error handling pro_q3_custom for user ${userId}:`, error.message);
         }
-        userState.waitingForCustomAnswer = 3;
-        console.log(`User ${userId} selected custom answer for question 3. UserState:`, userState);
-        
-        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>\n\nНапишите ваш ответ в чат:', {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
-            ]
-          },
-          parse_mode: 'HTML'
-        });
         break;
         
       // Вопрос 4 - место тренировок
@@ -315,22 +328,26 @@ bot.on('callback_query', async (ctx) => {
         await handleProAnswer(ctx, 4, 'На улице');
         break;
       case 'pro_q4_custom':
-        userState = userStates.get(userId);
-        if (!userState) {
-          userState = { step: 4, answers: {} };
-          userStates.set(userId, userState);
+        try {
+          userState = userStates.get(userId);
+          if (!userState) {
+            userState = { step: 4, answers: {} };
+            userStates.set(userId, userState);
+          }
+          userState.waitingForCustomAnswer = 4;
+          console.log(`User ${userId} selected custom answer for question 4. UserState:`, userState);
+          
+          await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+        } catch (error) {
+          console.log(`Error handling pro_q4_custom for user ${userId}:`, error.message);
         }
-        userState.waitingForCustomAnswer = 4;
-        console.log(`User ${userId} selected custom answer for question 4. UserState:`, userState);
-        
-        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
-            ]
-          },
-          parse_mode: 'HTML'
-        });
         break;
         
       // Вопрос 5 - ограничения
@@ -347,22 +364,26 @@ bot.on('callback_query', async (ctx) => {
         await handleProAnswer(ctx, 5, 'Только дома');
         break;
       case 'pro_q5_custom':
-        userState = userStates.get(userId);
-        if (!userState) {
-          userState = { step: 5, answers: {} };
-          userStates.set(userId, userState);
+        try {
+          userState = userStates.get(userId);
+          if (!userState) {
+            userState = { step: 5, answers: {} };
+            userStates.set(userId, userState);
+          }
+          userState.waitingForCustomAnswer = 5;
+          console.log(`User ${userId} selected custom answer for question 5. UserState:`, userState);
+          
+          await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>\n\nНапишите ваш ответ в чат:', {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+        } catch (error) {
+          console.log(`Error handling pro_q5_custom for user ${userId}:`, error.message);
         }
-        userState.waitingForCustomAnswer = 5;
-        console.log(`User ${userId} selected custom answer for question 5. UserState:`, userState);
-        
-        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>\n\nНапишите ваш ответ в чат:', {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
-            ]
-          },
-          parse_mode: 'HTML'
-        });
         break;
         
       case 'back_to_main':
