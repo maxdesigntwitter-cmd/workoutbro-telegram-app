@@ -76,7 +76,8 @@ async function sendProApplicationToAdmin(userId, username, answers) {
   
   // Экранируем специальные символы для HTML
   const escapeHtml = (text) => {
-    return text
+    if (!text) return '';
+    return String(text)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -84,7 +85,7 @@ async function sendProApplicationToAdmin(userId, username, answers) {
       .replace(/'/g, '&#39;');
   };
   
-  const applicationMessage = `📝 <b>Новая заявка PRO MODE</b>\n\n👤 <b>Пользователь:</b> @${escapeHtml(username)} (ID: ${userId})\n\n📋 <b>Данные заявки:</b>\n\n1️⃣ <b>Фитнес уровень:</b> ${escapeHtml(answers.level)}\n2️⃣ <b>Частота тренировок:</b> ${escapeHtml(answers.frequency)}\n3️⃣ <b>Цели:</b> ${escapeHtml(answers.goals)}\n4️⃣ <b>Опыт:</b> ${escapeHtml(answers.experience)}\n5️⃣ <b>Особенности:</b> ${escapeHtml(answers.special)}\n\n💬 <b>Связаться с пользователем:</b> <a href="tg://user?id=${userId}">Написать</a>`;
+  const applicationMessage = `📝 <b>Новая заявка PRO MODE</b>\n\n👤 <b>Пользователь:</b> @${escapeHtml(username)} (ID: ${userId})\n\n📋 <b>Данные заявки:</b>\n\n1️⃣ <b>Фитнес уровень:</b> ${escapeHtml(answers.question_1)}\n2️⃣ <b>Частота тренировок:</b> ${escapeHtml(answers.question_2)}\n3️⃣ <b>Цели:</b> ${escapeHtml(answers.question_3)}\n4️⃣ <b>Место тренировок:</b> ${escapeHtml(answers.question_4)}\n5️⃣ <b>Особенности:</b> ${escapeHtml(answers.question_5)}\n\n💬 <b>Связаться с пользователем:</b> <a href="tg://user?id=${userId}">Написать</a>`;
   
   const keyboard = {
     inline_keyboard: [
@@ -505,22 +506,40 @@ async function completeProApplication(ctx, answers) {
   
   console.log(`Completing application for user ${userId}:`, answers);
   
-  // Отправляем заявку админу
-  const success = await sendProApplicationToAdmin(userId, username, answers);
-  
-  if (success) {
-    await ctx.editMessageText(
-      '✅ <b>Заявка на PRO MODE отправлена!</b>\n\nСпасибо за заявку! Мы рассмотрим её и свяжемся с вами в ближайшее время.\n\n📞 <b>Связь:</b> @workoutbro_support',
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
-          ]
-        },
-        parse_mode: 'HTML'
-      }
-    );
-  } else {
+  try {
+    // Отправляем заявку админу
+    console.log(`Sending application to admin for user ${userId}`);
+    const success = await sendProApplicationToAdmin(userId, username, answers);
+    
+    if (success) {
+      console.log(`Application sent successfully for user ${userId}`);
+      await ctx.editMessageText(
+        '✅ <b>Заявка на PRO MODE отправлена!</b>\n\nСпасибо за заявку! Мы рассмотрим её и свяжемся с вами в ближайшее время.\n\n📞 <b>Связь:</b> @workoutbro_support',
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
+            ]
+          },
+          parse_mode: 'HTML'
+        }
+      );
+    } else {
+      console.log(`Failed to send application for user ${userId}`);
+      await ctx.editMessageText(
+        '❌ <b>Ошибка отправки заявки</b>\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 <b>Связь:</b> @workoutbro_support',
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
+            ]
+          },
+          parse_mode: 'HTML'
+        }
+      );
+    }
+  } catch (error) {
+    console.log(`Error in completeProApplication for user ${userId}:`, error.message);
     await ctx.editMessageText(
       '❌ <b>Ошибка отправки заявки</b>\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 <b>Связь:</b> @workoutbro_support',
       {
