@@ -218,7 +218,139 @@ bot.on('callback_query', async (ctx) => {
         break;
         
       case 'pro_q1_custom':
-        await ctx.editMessageText('✏️ **Свой ответ на вопрос 1/5:**\n\n🏋️ **Какой у вас фитнес уровень?**\n\nНапишите ваш ответ в чат:', {
+        // Устанавливаем флаг ожидания пользовательского ответа
+        let userState = userStates.get(userId);
+        if (!userState) {
+          userState = { step: 1, answers: {} };
+          userStates.set(userId, userState);
+        }
+        userState.waitingForCustomAnswer = 1;
+        
+        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 1/5:</b>\n\n🏋️ <b>Какой у вас фитнес уровень?</b>\n\nНапишите ваш ответ в чат:', {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+        break;
+        
+      // Вопрос 2 - частота тренировок
+      case 'pro_q2_1_2':
+        await handleProAnswer(ctx, 2, '1-2 раза в неделю');
+        break;
+      case 'pro_q2_3_4':
+        await handleProAnswer(ctx, 2, '3-4 раза в неделю');
+        break;
+      case 'pro_q2_5_6':
+        await handleProAnswer(ctx, 2, '5-6 раз в неделю');
+        break;
+      case 'pro_q2_daily':
+        await handleProAnswer(ctx, 2, 'Ежедневно');
+        break;
+      case 'pro_q2_custom':
+        userState = userStates.get(userId);
+        if (!userState) {
+          userState = { step: 2, answers: {} };
+          userStates.set(userId, userState);
+        }
+        userState.waitingForCustomAnswer = 2;
+        
+        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+        break;
+        
+      // Вопрос 3 - цели
+      case 'pro_q3_mass':
+        await handleProAnswer(ctx, 3, 'Набор массы');
+        break;
+      case 'pro_q3_weight_loss':
+        await handleProAnswer(ctx, 3, 'Похудение');
+        break;
+      case 'pro_q3_strength':
+        await handleProAnswer(ctx, 3, 'Сила');
+        break;
+      case 'pro_q3_endurance':
+        await handleProAnswer(ctx, 3, 'Выносливость');
+        break;
+      case 'pro_q3_custom':
+        userState = userStates.get(userId);
+        if (!userState) {
+          userState = { step: 3, answers: {} };
+          userStates.set(userId, userState);
+        }
+        userState.waitingForCustomAnswer = 3;
+        
+        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>\n\nНапишите ваш ответ в чат:', {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+        break;
+        
+      // Вопрос 4 - место тренировок
+      case 'pro_q4_home':
+        await handleProAnswer(ctx, 4, 'Дома');
+        break;
+      case 'pro_q4_gym':
+        await handleProAnswer(ctx, 4, 'В зале');
+        break;
+      case 'pro_q4_trainer':
+        await handleProAnswer(ctx, 4, 'С тренером');
+        break;
+      case 'pro_q4_outdoor':
+        await handleProAnswer(ctx, 4, 'На улице');
+        break;
+      case 'pro_q4_custom':
+        userState = userStates.get(userId);
+        if (!userState) {
+          userState = { step: 4, answers: {} };
+          userStates.set(userId, userState);
+        }
+        userState.waitingForCustomAnswer = 4;
+        
+        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+        break;
+        
+      // Вопрос 5 - ограничения
+      case 'pro_q5_none':
+        await handleProAnswer(ctx, 5, 'Нет ограничений');
+        break;
+      case 'pro_q5_injuries':
+        await handleProAnswer(ctx, 5, 'Есть травмы');
+        break;
+      case 'pro_q5_time':
+        await handleProAnswer(ctx, 5, 'Ограниченное время');
+        break;
+      case 'pro_q5_home_only':
+        await handleProAnswer(ctx, 5, 'Только дома');
+        break;
+      case 'pro_q5_custom':
+        userState = userStates.get(userId);
+        if (!userState) {
+          userState = { step: 5, answers: {} };
+          userStates.set(userId, userState);
+        }
+        userState.waitingForCustomAnswer = 5;
+        
+        await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>\n\nНапишите ваш ответ в чат:', {
           reply_markup: {
             inline_keyboard: [
               [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
@@ -251,6 +383,9 @@ bot.on('callback_query', async (ctx) => {
   }
 });
 
+// Хранилище состояний пользователей для заявок PRO
+const userStates = new Map();
+
 // Функция обработки ответов PRO заявки
 async function handleProAnswer(ctx, step, answer) {
   const userId = ctx.from.id;
@@ -258,21 +393,109 @@ async function handleProAnswer(ctx, step, answer) {
   
   console.log(`Processing step ${step} for user ${userId}, answer: ${answer}`);
   
-  // Создаем простую заявку с одним ответом
-  const application = {
-    level: answer,
-    frequency: 'Не указано',
-    goals: 'Не указано',
-    experience: 'Не указано',
-    special: 'Не указано'
+  // Получаем или создаем состояние пользователя
+  let userState = userStates.get(userId);
+  if (!userState) {
+    userState = {
+      step: 1,
+      answers: {}
+    };
+    userStates.set(userId, userState);
+  }
+  
+  // Сохраняем ответ
+  userState.answers[`question_${step}`] = answer;
+  userState.step = step + 1;
+  
+  // Если это не последний вопрос, показываем следующий
+  if (step < 5) {
+    await showNextQuestion(ctx, step + 1);
+  } else {
+    // Завершаем заявку
+    await completeProApplication(ctx, userState.answers);
+    userStates.delete(userId);
+  }
+}
+
+// Функция показа следующего вопроса
+async function showNextQuestion(ctx, step) {
+  const questions = {
+    2: {
+      text: '✅ <b>Фитнес уровень:</b> ' + ctx.callbackQuery.message.text.split('🏋️')[1].split('\n')[0] + '\n\n<b>Вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>',
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '🏃 1-2 раза в неделю', callback_data: 'pro_q2_1_2' }],
+          [{ text: '💪 3-4 раза в неделю', callback_data: 'pro_q2_3_4' }],
+          [{ text: '🔥 5-6 раз в неделю', callback_data: 'pro_q2_5_6' }],
+          [{ text: '📅 Ежедневно', callback_data: 'pro_q2_daily' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q2_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    },
+    3: {
+      text: '✅ <b>Частота тренировок:</b> ' + ctx.callbackQuery.message.text.split('📅')[1].split('\n')[0] + '\n\n<b>Вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>',
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '💪 Набор массы', callback_data: 'pro_q3_mass' }],
+          [{ text: '🔥 Похудение', callback_data: 'pro_q3_weight_loss' }],
+          [{ text: '💪 Сила', callback_data: 'pro_q3_strength' }],
+          [{ text: '🏃 Выносливость', callback_data: 'pro_q3_endurance' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q3_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    },
+    4: {
+      text: '✅ <b>Цели:</b> ' + ctx.callbackQuery.message.text.split('🎯')[1].split('\n')[0] + '\n\n<b>Вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>',
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '🏠 Дома', callback_data: 'pro_q4_home' }],
+          [{ text: '🏋️ В зале', callback_data: 'pro_q4_gym' }],
+          [{ text: '👨‍🏫 С тренером', callback_data: 'pro_q4_trainer' }],
+          [{ text: '🌳 На улице', callback_data: 'pro_q4_outdoor' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q4_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    },
+    5: {
+      text: '✅ <b>Место тренировок:</b> ' + ctx.callbackQuery.message.text.split('🏋️')[1].split('\n')[0] + '\n\n<b>Вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>',
+      keyboard: {
+        inline_keyboard: [
+          [{ text: '✅ Нет ограничений', callback_data: 'pro_q5_none' }],
+          [{ text: '🩹 Есть травмы', callback_data: 'pro_q5_injuries' }],
+          [{ text: '⏰ Ограниченное время', callback_data: 'pro_q5_time' }],
+          [{ text: '🏠 Только дома', callback_data: 'pro_q5_home_only' }],
+          [{ text: '✏️ Свой ответ', callback_data: 'pro_q5_custom' }],
+          [{ text: '❌ Отменить', callback_data: 'back_to_main' }]
+        ]
+      }
+    }
   };
   
+  const question = questions[step];
+  if (question) {
+    await ctx.editMessageText(question.text, {
+      reply_markup: question.keyboard,
+      parse_mode: 'HTML'
+    });
+  }
+}
+
+// Функция завершения заявки
+async function completeProApplication(ctx, answers) {
+  const userId = ctx.from.id;
+  const username = ctx.from.username || 'без username';
+  
+  console.log(`Completing application for user ${userId}:`, answers);
+  
   // Отправляем заявку админу
-  const success = await sendProApplicationToAdmin(userId, username, application);
+  const success = await sendProApplicationToAdmin(userId, username, answers);
   
   if (success) {
     await ctx.editMessageText(
-      '✅ **Заявка на PRO MODE отправлена!**\n\nСпасибо за заявку! Мы рассмотрим её и свяжемся с вами в ближайшее время.\n\n📞 **Связь:** @workoutbro_support',
+      '✅ <b>Заявка на PRO MODE отправлена!</b>\n\nСпасибо за заявку! Мы рассмотрим её и свяжемся с вами в ближайшее время.\n\n📞 <b>Связь:</b> @workoutbro_support',
       {
         reply_markup: {
           inline_keyboard: [
@@ -284,7 +507,7 @@ async function handleProAnswer(ctx, step, answer) {
     );
   } else {
     await ctx.editMessageText(
-      '❌ **Ошибка отправки заявки**\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 **Связь:** @workoutbro_support',
+      '❌ <b>Ошибка отправки заявки</b>\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 <b>Связь:</b> @workoutbro_support',
       {
         reply_markup: {
           inline_keyboard: [
@@ -304,44 +527,27 @@ bot.on('text', async (ctx) => {
   
   console.log(`Text message from user ${userId}: ${text}`);
   
-  // Простая заявка с пользовательским ответом
-  const username = ctx.from.username || 'без username';
-  const application = {
-    level: text,
-    frequency: 'Не указано',
-    goals: 'Не указано',
-    experience: 'Не указано',
-    special: 'Не указано'
-  };
-  
-  // Отправляем заявку админу
-  const success = await sendProApplicationToAdmin(userId, username, application);
-  
-  if (success) {
-    await ctx.reply(
-      '✅ **Заявка на PRO MODE отправлена!**\n\nСпасибо за заявку! Мы рассмотрим её и свяжемся с вами в ближайшее время.\n\n📞 **Связь:** @workoutbro_support',
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
-          ]
-        },
-        parse_mode: 'HTML'
-      }
-    );
-  } else {
-    await ctx.reply(
-      '❌ **Ошибка отправки заявки**\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 **Связь:** @workoutbro_support',
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '🏠 Главное меню', callback_data: 'back_to_main' }]
-          ]
-        },
-        parse_mode: 'HTML'
-      }
-    );
+  // Проверяем, заполняет ли пользователь заявку
+  const userState = userStates.get(userId);
+  if (userState && userState.waitingForCustomAnswer) {
+    const step = userState.waitingForCustomAnswer;
+    userState.answers[`question_${step}`] = text;
+    userState.waitingForCustomAnswer = null;
+    userState.step = step + 1;
+    
+    // Переходим к следующему вопросу
+    if (step < 5) {
+      await showNextQuestion(ctx, step + 1);
+    } else {
+      // Завершаем заявку
+      await completeProApplication(ctx, userState.answers);
+      userStates.delete(userId);
+    }
+    return;
   }
+  
+  // Если пользователь не в процессе заполнения заявки, игнорируем сообщение
+  console.log(`User ${userId} is not filling application, ignoring message`);
 });
 
 // Настройка webhook
