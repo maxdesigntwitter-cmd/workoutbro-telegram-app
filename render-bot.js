@@ -257,6 +257,7 @@ bot.on('callback_query', async (ctx) => {
           userStates.set(userId, userState);
         }
         userState.waitingForCustomAnswer = 2;
+        console.log(`User ${userId} selected custom answer for question 2. UserState:`, userState);
         
         await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 2/5:</b>\n\n📅 <b>Как часто вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
           reply_markup: {
@@ -288,6 +289,7 @@ bot.on('callback_query', async (ctx) => {
           userStates.set(userId, userState);
         }
         userState.waitingForCustomAnswer = 3;
+        console.log(`User ${userId} selected custom answer for question 3. UserState:`, userState);
         
         await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 3/5:</b>\n\n🎯 <b>Какие у вас цели?</b>\n\nНапишите ваш ответ в чат:', {
           reply_markup: {
@@ -319,6 +321,7 @@ bot.on('callback_query', async (ctx) => {
           userStates.set(userId, userState);
         }
         userState.waitingForCustomAnswer = 4;
+        console.log(`User ${userId} selected custom answer for question 4. UserState:`, userState);
         
         await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 4/5:</b>\n\n🏋️ <b>Где вы тренируетесь?</b>\n\nНапишите ваш ответ в чат:', {
           reply_markup: {
@@ -350,6 +353,7 @@ bot.on('callback_query', async (ctx) => {
           userStates.set(userId, userState);
         }
         userState.waitingForCustomAnswer = 5;
+        console.log(`User ${userId} selected custom answer for question 5. UserState:`, userState);
         
         await ctx.editMessageText('✏️ <b>Свой ответ на вопрос 5/5:</b>\n\n⚠️ <b>Есть ли ограничения или особенности?</b>\n\nНапишите ваш ответ в чат:', {
           reply_markup: {
@@ -685,6 +689,8 @@ bot.on('text', async (ctx) => {
   
   // Проверяем, заполняет ли пользователь заявку
   const userState = userStates.get(userId);
+  console.log(`User ${userId} text message. UserState:`, userState);
+  
   if (userState && userState.waitingForCustomAnswer) {
     const step = userState.waitingForCustomAnswer;
     userState.answers[`question_${step}`] = text;
@@ -692,11 +698,14 @@ bot.on('text', async (ctx) => {
     userState.step = step + 1;
     
     console.log(`User ${userId} answered question ${step} with custom text: ${text}`);
+    console.log(`Updated userState:`, userState);
     
     // Переходим к следующему вопросу
     if (step < 5) {
+      console.log(`Moving to next question ${step + 1} for user ${userId}`);
       await showNextQuestionForText(ctx, step + 1);
     } else {
+      console.log(`Completing application for user ${userId}`);
       // Завершаем заявку
       await completeProApplication(ctx, userState.answers);
       userStates.delete(userId);
