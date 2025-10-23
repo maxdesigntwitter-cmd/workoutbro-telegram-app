@@ -660,7 +660,7 @@ async function completeProApplication(ctx, answers) {
     
     if (success) {
       console.log(`Application sent successfully for user ${userId}`);
-      await ctx.editMessageText(
+      await ctx.reply(
         '✅ <b>Заявка на PRO MODE отправлена!</b>\n\nСпасибо за заявку! Мы рассмотрим её и свяжемся с вами в ближайшее время.\n\n📞 <b>Связь:</b> @workoutbro_support',
         {
           reply_markup: {
@@ -673,7 +673,7 @@ async function completeProApplication(ctx, answers) {
       );
     } else {
       console.log(`Failed to send application for user ${userId}`);
-      await ctx.editMessageText(
+      await ctx.reply(
         '❌ <b>Ошибка отправки заявки</b>\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 <b>Связь:</b> @workoutbro_support',
         {
           reply_markup: {
@@ -687,7 +687,7 @@ async function completeProApplication(ctx, answers) {
     }
   } catch (error) {
     console.log(`Error in completeProApplication for user ${userId}:`, error.message);
-    await ctx.editMessageText(
+    await ctx.reply(
       '❌ <b>Ошибка отправки заявки</b>\n\nПопробуйте позже или свяжитесь с поддержкой.\n\n📞 <b>Связь:</b> @workoutbro_support',
       {
         reply_markup: {
